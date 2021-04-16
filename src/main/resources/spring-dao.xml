@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--spring读取配置文件-->
+    <context:property-placeholder location="classpath:jdbc.properties"/>
+    <!--数据库连接池 (jdcp:半自动化操作，不能自动连接
+                     c3p0:全自动化操作，自动化加载配置文件，并且可以自动设置到对象中
+                     druid/hikari...-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <!--四大组件-->
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+
+        <!--最小连接数  默认值：3  -->
+        <property name="minPoolSize" value="5"/>
+        <property name="maxPoolSize" value="20"/>
+        <!-- 从数据库获取新连接失败后重复尝试的次数。小于等于0表示无限次  默认值: 30-->
+        <property name="acquireRetryAttempts" value="30"/>
+        <!-- 连接关闭时，是否将所有未提交的操作进行事务回滚  默认值：false -->
+        <property name="autoCommitOnClose" value="false"/>
+        <property name="checkoutTimeout" value="10000"/>
+    </bean>
+
+    <!--配置mybatis的SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--需要数据源及mybatis核心配置文件-->
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:mybatis-configure.xml"/>
+    </bean>
+
+    <!--dao接口扫描 动态注入-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!--注入sqlSessionFactory-->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!--扫描dao包-->
+        <property name="basePackage" value="com.xiekl.dao"/>
+    </bean>
+</beans>

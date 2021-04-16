@@ -1,1 +1,1 @@
-# ssm
+# spring-sringMVC-mybatis

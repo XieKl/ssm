@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--扫描包-->
+    <context:component-scan base-package="com.xiekl.services"/>
+
+    <!--将业务类注入到容器中，可以通过配置或注解方式实现-->
+
+    <!--配置方式-->
+    <bean id="BookServicesImpl" class="com.xiekl.services.BookServicesImpl">
+        <property name="bookMapper" ref="bookMapper"/>
+    </bean>
+
+    <!--开启默认事务 声明式事务-->
+    <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+        <!--注入数据源-->
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!--AOP事务-->
+
+</beans>
