@@ -1,1 +1,1 @@
-# spring-sringMVC-mybatis
+# Spring-Spring MVC-MyBatis
